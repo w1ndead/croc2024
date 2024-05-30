@@ -1,0 +1,34 @@
+{% extends 'header.html' %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="../static/css/register.css">
+{% endblock %}
+
+{% block main %}
+<div class="esh">
+    <div class="vhod">
+        <h3 class="enter">Регистрация</h3>
+    </div>
+    <div class="log-in">
+        <form method="post" action="/login">
+            <label for="email"><p>Электронная почта</p></label>
+            <input type="text" placeholder="Enter E-mail" name="email" required>
+            <br>
+            <label for="username"><p>Имя пользователя</p></label>
+            <input type="text" placeholder="Enter Username" name="username" required>
+            <br>
+            <label for="password"><p>Пароль</p></label>
+            <input type="password" placeholder="Enter Password" name="password" required>
+            <br>
+            <label for="repeat-password"><p>Повторите пароль</p></label>
+            <input type="password" placeholder=" Password" name="repeat-password" required>
+            <br>
+            <button class="lgnbutton" type="submit">Войти</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
