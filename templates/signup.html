@@ -1,0 +1,31 @@
+{% extends 'header.html' %}
+
+{% block title %}
+Sign Up
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="../static/css/signup.css">
+{% endblock %}
+
+{% block main %}
+<div class="esh">
+    <div class="vhod">
+        <h3 class="enter" id="error-message">Регистрация</h3>
+    </div>
+    <div class="log-in">
+        <div>
+            <label for="username"><p>Имя пользователя</p></label>
+            <input type="text" placeholder="Введите никнейм" name="username" id="username"><br>
+            <label for="email"><p>Электронная почта</p></label>
+            <input type="text" placeholder="Введите почту" name="email" id="email"><br>
+            <label for="password"><p>Пароль</p></label>
+            <input type="password" placeholder="Введите пароль" name="password" id="password"><br>
+            <label for="repeat-password"><p>Повторите пароль</p></label>
+            <input type="password" placeholder="Введите пароль ещё раз" name="repeat-password" id="repeat-password"><br>
+            <button class="lgnbutton" id="signup-btn">Войти</button>
+        </div>
+    </div>
+</div>
+<script src="../static/js/signup.js"></script>
+{% endblock %}

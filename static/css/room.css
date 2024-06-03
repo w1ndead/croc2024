@@ -1,0 +1,73 @@
+* {
+    background-color: #272727;
+    font-family: "Montserrat", sans-serif;
+}
+
+.frst-row {
+    margin-left: 5%;
+    margin-top: 8%;
+    background-color: #272727;
+    width: 90%;
+    height: 160px;
+
+}
+
+.scnd-row {
+    margin-left: 5%;
+    margin-top: 4%;
+    background-color: #272727;
+    width: 90%;
+    height: 160px;
+}
+
+.thrd-row {
+    margin-left: 5%;
+    margin-top: 4%;
+    background-color: #272727;
+    width: 90%;
+    height: 160px;
+
+}
+
+.frstcam {
+    margin-left: 7%;
+    width: 16%;
+    height: 100%;
+    background-color: white;
+    display: inline-block;
+    border-radius: 15px;
+    padding: 1% 1%;
+}
+
+.scndcam {
+    margin-left: 53.5%;
+    width: 16%;
+    height: 100%;
+    background-color: white;
+    display: inline-block;
+    border-radius: 15px;
+    padding: 1% 1%;
+}
+
+.esh {
+    margin-top: -60px;
+    height: 600px;
+    align-items: center;
+    background-color: #272727;
+}
+
+.leave {
+    width: 100%;
+    align-items: center;
+    align-content: center;
+}
+
+button {
+    margin-left: 45%;
+    margin-top: 2%;
+    width: 10%;
+    text-align: center;
+    background-color: #FF7070;
+    color: white;
+    border-radius: 10px;
+}

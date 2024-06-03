@@ -1,0 +1,40 @@
+@app.route('/')
+def profile():
+    new_user = User(username = "vasyazhukov", email = "vzhukov623@gmail.com", password = "52")
+    db.session.add(new_user)
+    db.session.commit()
+    delete = User.query.filter_by(username="vasyazhukov").all()
+    db.session.delete(delete[1])
+    db.session.commit()
+    tim = User.query.filter_by(username="timsytsko").all()
+    print(tim[0].password)
+    all = User.query.filter_by().all()
+    for i in all:
+        print(i.email)
+    return render_template("main.html")
+
+@app.route('/cookie/')
+def cookie():
+    if not request.cookies.get('username'):
+        cookie = make_response("Setting a cookie")
+        cookie.set_cookie("username", "vasyazhukov", max_age=60*3)
+    else:
+        cookie = make_response("Value of cookie username is {}".format(request.cookies.get("username")))
+    return cookie
+
+def check_cookies():
+    if request.cookies.get('username') and request.cookies.get('session_key'):
+        username = request.cookies.get('username')
+        user_id = Users.query.filter_by(username = username).first()
+        if user_id is None:
+            return False
+        user_id = user_id.user_id
+        session_key = Sessions.query.filter_by(user_id = user_id).first()
+        if session_key is None:
+            return False
+        session_key = session_key.session_key
+        real_session_key = request.cookies.get('session_key')
+        if (session_key == real_session_key):
+            return True
+        else:
+            return False

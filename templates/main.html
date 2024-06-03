@@ -1,0 +1,86 @@
+{% extends 'header.html' %}
+
+{% block title %}
+Main
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="../static/css/main.css">
+{% endblock %}
+
+{% block main %}
+<table class="rooms">
+    <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Название</th>
+            <th scope="col">Ведущий</th>
+            <th scope="col">Игроки</th>
+            <th scope="col">Зрители</th>
+            <th scope="col">Статус</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">1488</th>
+            <td>ex1</td>
+            <td>-</td>
+            <td>96</td>
+            <td>0</td>
+            <td>Game</td>
+            <td><button class="btn mt-3">Войти</button></td>
+        </tr>
+        <tr>
+            <th scope="row">1489</th>
+            <td>ex2</td>
+            <td>-</td>
+            <td>52</td>
+            <td>1</td>
+            <td>Game</td>
+            <td><button class="btn mt-3">Войти</button></td>
+        </tr>
+        <tr>
+            <th scope="row">148862</th>
+            <td>ex3</td>
+            <td>suiiiii</td>
+            <td>69</td>
+            <td>96</td>
+            <td>Wait</td>
+            <td><button class="btn mt-3">Войти</button></td>
+        </tr>
+        <tr>
+            <th scope="row">148852</th>
+            <td>ex4</td>
+            <td>-</td>
+            <td>0</td>
+            <td>10000</td>
+            <td>Game</td>
+            <td><button class="btn mt-3">Войти</button></td>
+        </tr>
+        <tr>
+            <th scope="row">148969</th>
+            <td>ex5</td>
+            <td>mazer228</td>
+            <td>5269</td>
+            <td>691</td>
+            <td>Wait</td>
+            <td><button class="btn mt-3">Войти</button></td>
+        </tr>
+        <tr>
+            <th scope="row">14695252</th>
+            <td>ex7</td>
+            <td>-</td>
+            <td>524</td>
+            <td>14</td>
+            <td>Game</td>
+            <td><button class="btn mt-3">Войти</button></td>
+        </tr>
+    </tbody>
+</table>
+<div class="error">
+    <button class="create-btn" id="create_room_btn">Coздать игру</button>
+    <h id="error-message"></h>
+</div>
+<script src="../static/js/main.js"></script>
+{% endblock %}

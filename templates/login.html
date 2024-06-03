@@ -1,0 +1,27 @@
+{% extends 'header.html' %}
+
+{% block title %}
+Log In
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="../static/css/login.css">
+{% endblock %}
+
+{% block main %}
+<div class="esh">
+    <div class="vhod">
+        <h3 class="enter" id="error-message">Вход</h3>
+    </div>
+    <div class="log-in">
+        <div>
+            <label for="username"><p>Имя пользователя</p></label>
+            <input type="text" placeholder="Введите никнейм" name="username" id="username"><br>
+            <label for="password"><p>Пароль</p></label>
+            <input type="password" placeholder="Введите пароль" name="password" id="password"><br>
+            <button class="lgnbutton" id="login-btn">Войти</button>
+        </div>
+    </div>
+</div>
+<script src="../static/js/login.js"></script>
+{% endblock %}
