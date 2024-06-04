@@ -23,6 +23,7 @@ body {
 }
 
 .enter_btn {
+    border: none;
     width: 90%;
     height: 100%;
     background-color: #FF7070;
@@ -32,6 +33,7 @@ body {
 }
 
 .view_enter_btn {
+    border: none;
     width: 70%;
     height: 100% + 2px;
     background-color: #FF7070;
