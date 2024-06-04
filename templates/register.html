@@ -11,24 +11,28 @@ Register
 {% block main %}
 <div class="esh">
     <div class="vhod">
-        <h3 class="enter">Регистрация</h3>
+        <h3>Регистрация</h3>
     </div>
     <div class="log-in">
-        <form method="post" action="/login">
+        <div class="inputs">
             <label for="email"><p>Электронная почта</p></label>
+            <br>
             <input type="text" placeholder="Enter E-mail" name="email" required>
             <br>
             <label for="username"><p>Имя пользователя</p></label>
+            <br>
             <input type="text" placeholder="Enter Username" name="username" required>
             <br>
             <label for="password"><p>Пароль</p></label>
+            <br>
             <input type="password" placeholder="Enter Password" name="password" required>
             <br>
             <label for="repeat-password"><p>Повторите пароль</p></label>
-            <input type="password" placeholder=" Password" name="repeat-password" required>
             <br>
-            <button class="lgnbutton" type="submit">Войти</button>
-        </form>
+            <input type="password" placeholder="Repeat Password" name="repeat-password" required>
+            <br>
+            <button class="lgnbutton" type="submit">Зарегистрироваться</button>
+        </div>
     </div>
 </div>
 {% endblock %}

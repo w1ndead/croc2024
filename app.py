@@ -15,5 +15,13 @@ def login():
 def register():
     return render_template('register.html')
 
+@app.route('/create_room')
+def create_room():
+    return render_template('create_room.html')
+
+@app.route('/room')
+def room():
+    return render_template('room.html')
+
 if __name__ == '__main__':
     app.run()

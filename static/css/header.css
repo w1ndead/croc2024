@@ -1,4 +1,4 @@
-.head{
+.head {
     border: 2px;
     background-color: #272727;
     width: 100%;
@@ -20,11 +20,12 @@ p {
 }
 
 .clashmafia {
-    margin-right: 400px;
+    margin-right: 60%;
 }
 
 .logins {
-    margin-left: 500px;
+    margin-left: 60%;
+    margin-top: -3.25%;
 }
 
 .durak {
@@ -52,3 +53,8 @@ p {
     margin: 6px 10px;
     cursor: pointer;
   }
+
+.button:hover {
+    color: #272727;
+    background-color: #fe5c5c;
+}

@@ -3,3 +3,87 @@
     font-family: "Montserrat", sans-serif;
 }
 
+body {
+    background-color: #272727;
+    color: #FF7070;
+}
+
+.rooms {
+    width: 80%;
+    height: 50%;
+    align-items: center;
+    text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 3%;
+}
+
+.rooms td,.rooms th {
+    padding: 1% 0.25%;
+}
+
+.enter_btn {
+    width: 90%;
+    height: 100%;
+    background-color: #FF7070;
+    color: #272727;
+    border-radius: 10px;
+    margin-top: -1%;
+}
+
+.view_enter_btn {
+    width: 70%;
+    height: 100% + 2px;
+    background-color: #FF7070;
+    color: #272727;
+    border-radius: 10px;
+    margin-top: -1%;
+    margin-left: -20%;
+}
+
+.btn {
+    box-shadow: none;
+    border:none;
+    width: 110%;
+    height: 60%;
+    color: #272727;
+    background-color: #FF7070;
+    border-radius: 10px;
+    letter-spacing: 1.3px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8%;
+    font-size: 70%;
+    text-align: center;
+}
+
+.create-btn {
+    box-shadow: none;
+    border:none;
+    width: 20%;
+    height: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: #272727;
+    background-color: #FF7070;
+    border-radius: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    font-size: 60%;
+    text-align: center;
+    font-size: 20px;
+}
+
+.create-btn:hover {
+    color: #272727;
+    background-color: #fe5c5c;
+}
+
+.btn:hover {
+    color: #272727;
+    background-color: #fe5c5c;
+}
+

@@ -1,14 +1,16 @@
-html {
+* {
     background-color: #272727;
     font-family: "Montserrat", sans-serif;
 }
   
 input[type=text], input[type=password] {
-    width: 90%;
+    width: 30%;
     padding: 15px;
-    margin: 3px 20px 22px 0;
+    margin: 3px 0 20px 0;
+    margin-left: 35%;
     display: inline-block;
     background-color: #272727;
+    color: #ffffff;
     border: 2px solid #ff7070;
     border-radius: 15px;
 }
@@ -22,12 +24,11 @@ input[type=text]:focus, input[type=password]:focus {
 .lgnbutton {
   background-color: #04AA6D;
   padding: 14px 20px;
-  margin: 8px 30px;
   border: none;
   cursor: pointer;
-  width: 100%;
+  width: 20%;
   border-radius: 15px;
-  width: 300px;
+  margin-left: 40%;
 }
 
 button:hover {
@@ -43,12 +44,15 @@ p {
     background-color: #272727;
 }
 
+label {
+  margin-left: 35%;
+}
+
 .log-in {
     border: none;
-    width: 33%;
-    margin-left: 34%;
-    height: 570px;
-    border-radius: 20px;
+    width: 100%;
+    margin-top: 10px;
+    height: 350px;
     display: flex;
     align-items: center;
     align-content: center;
@@ -57,14 +61,23 @@ p {
 
 .vhod {
   text-align: center;
+  width: 100%;
+  background-color: #272727;
 }
 
 .esh {
     margin-top: -25px;
+    align-items: center;
     background-color: #272727;
 }
 
-.enter {
+h3 {
+  margin-top: 5%;
   color: #ff7070;
+}
 
+.inputs {
+  align-items: center;
+  align-content: center;
+  width: 100%;
 }

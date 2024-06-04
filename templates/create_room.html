@@ -1,0 +1,41 @@
+{% extends 'header.html' %}
+
+{% block title %}
+Create Room
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="../static/css/create_room.css">
+{% endblock %}
+
+{% block main %}
+<div class="esh">
+    <div class="vhod">
+        <h3 class="enter">Создание комнаты</h3>
+    </div>
+    <div class="create_room">
+        <form method="post" action="/create_room">
+            <label for="room_name"><p>Название Комнаты</p></label>
+            <input type="text" placeholder="room_name" name="room_name" required>
+            <br>
+            <label for="password"><p>Ведущий</p></label>
+            <select name="master" class="master">
+                <p>
+                    <option value="first">Да</option>
+                    <option value="second" selected>Нет</option>
+                </p>
+            </select>
+            <br>
+            <label for="password"><p>Приватность</p></label>
+            <select name="master" class="master">
+                <p>
+                    <option value="first">Да</option>
+                    <option value="second" selected>Нет</option>
+                </p>
+            </select>
+            <br>
+            <button class="lgnbutton" type="submit">Создать</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

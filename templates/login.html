@@ -10,19 +10,18 @@ Log In
 
 {% block main %}
 <div class="esh">
-<div class="vhod">
-    <h3 class="enter">Вход</h3>
-</div>
 <div class="log-in">
-    <form method="post" action="/login">
+    <div class="inputs">
         <label for="username"><p>Имя пользователя</p></label>
+        <br>
         <input type="text" placeholder="Enter Username" name="username" required>
         <br>
         <label for="password"><p>Пароль</p></label>
+        <br>
         <input type="password" placeholder="Enter Password" name="password" required>
         <br>
         <button class="lgnbutton" type="submit">Войти</button>
-    </form>
+    </div>
 </div>
 </div>
 {% endblock %}
