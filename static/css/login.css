@@ -23,12 +23,26 @@ input[type=text]:focus, input[type=password]:focus {
 .lgnbutton {
   background-color: #04AA6D;
   padding: 14px 20px;
-  margin: 8px 5%;
+  margin: 8px 21%;
+  text-align: center;
   border: none;
   cursor: pointer;
   width: 80%;
   border-radius: 15px;
   width: 300px;
+}
+
+.regbutton {
+  background-color: #272727;
+  padding: 14px 20px;
+  margin: 8px 21%;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  width: 80%;
+  border-radius: 15px;
+  width: 300px;
+  color: #ff7070;
 }
 
 button:hover {

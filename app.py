@@ -276,4 +276,4 @@ def check_cookies():
             return False
 
 if __name__ == "__main__":
-    app.run(debug=True, host='192.168.172.23', port=1488)
+    app.run(debug=True, port=1488)
