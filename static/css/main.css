@@ -9,18 +9,38 @@ body {
 }
 
 .rooms {
-    max-width: 80%;
+    width: 80%;
     height: 50%;
     align-items: center;
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 20px;
+    margin-left: 10%;
+    margin-right: 10%;
     margin-top: 3%;
 }
 
 .rooms td,.rooms th {
-    padding: 0 25px;
+    padding: 1% 0.25%;
+}
+
+.enter_btn {
+    border: none;
+    width: 90%;
+    height: 100%;
+    background-color: #FF7070;
+    color: #272727;
+    border-radius: 10px;
+    margin-top: -1%;
+}
+
+.view_enter_btn {
+    border: none;
+    width: 70%;
+    height: 100% + 2px;
+    background-color: #FF7070;
+    color: #272727;
+    border-radius: 10px;
+    margin-top: -1%;
+    margin-left: -20%;
 }
 
 .btn {
@@ -43,7 +63,7 @@ body {
 .create-btn {
     box-shadow: none;
     border:none;
-    width: 10%;
+    width: 20%;
     height: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -59,12 +79,12 @@ body {
     font-size: 20px;
 }
 
-.btn:hover {
+.create-btn:hover {
     color: #272727;
     background-color: #fe5c5c;
 }
 
-.create-btn:hover {
+.btn:hover {
     color: #272727;
     background-color: #fe5c5c;
 }

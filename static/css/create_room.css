@@ -1,4 +1,4 @@
-html {
+* {
     background-color: #272727;
     font-family: "Montserrat", sans-serif;
 }
@@ -48,7 +48,7 @@ p {
     border: none;
     width: 33%;
     margin-left: 34%;
-    height: 570px;
+    margin-top: 3%;
     border-radius: 20px;
     display: flex;
     align-items: center;

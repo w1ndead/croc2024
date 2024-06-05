@@ -15,7 +15,7 @@ send_xhr('POST', '/check_if_user_logged',
         console.log(xhr.response.check)
         if (xhr.response.check) {
             html += `
-            <p class="barak">${xhr.response.username}</p>
+            <p class="username">${xhr.response.username}</p>
             <a href="/logout_btn" class="button-container"><button class="button">Выйти из аккаунта</button></a>`;
         } else {
             html += `
