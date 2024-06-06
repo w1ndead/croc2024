@@ -28,6 +28,59 @@ class Session(db.Model):
     def __repr__(self):
         return '<Session %r>' % self.id
 
+rooms = {
+    'stariy_bog': {
+        'users': {
+            0: 'down',
+            1: 'down1',
+            2: 'down2',
+            3: '',
+            4: '',
+            5: '',
+            6: '',
+            7: '',
+            8: '',
+            9: ''
+        },
+        'spectators': [],
+        'settings': {
+            'id': 1488,
+            'master': -1,
+            'status': 'не начато',
+            'host_id': 1,
+            'privacy_status': 'открытая'
+        }
+    },
+    'tim_loh': {
+        'users': {
+            0: 'down',
+            1: 'down1',
+            2: 'down2',
+            3: 'down3',
+            4: '',
+            5: '',
+            6: '',
+            7: '',
+            8: '',
+            9: ''
+        },
+        'spectators': ['tim_pidor', 'vasya_umniy'],
+        'settings': {
+            'id': 148852,
+            'master': 'vasya',
+            'status': 'идет игра',
+            'host_id': 2,
+            'privacy_status': 'закрытая'
+        }
+    }
+}
+
+@app.route('/get_rooms', methods=['GET', 'POST'])
+def get_rooms():
+    if (request.method == "GET"):
+        abort(404)
+    return jsonify(rooms)
+
 @app.route('/check_if_loggined_create_room_btn', methods=['GET', 'POST'])
 def check_if_loggined_create_room_btn():
     if (request.method == "GET"):

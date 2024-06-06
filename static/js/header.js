@@ -12,7 +12,6 @@ send_xhr('POST', '/check_if_user_logged',
     {},
     function(xhr) {
         html = ``;
-        console.log(xhr.response.check)
         if (xhr.response.check) {
             html += `
             <p class="username">${xhr.response.username}</p>

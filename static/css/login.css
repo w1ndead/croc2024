@@ -31,15 +31,14 @@ width: 90%;
 }
 
 .regbutton {
-background-color: #272727;
-padding: 14px 0px;
-text-align: center;
-border: none;
-cursor: pointer;
-width: 100%;
-border-radius: 15px;
-width: 300px;
-color: #ff7070;
+  background-color: #272727;
+  padding: 14px 0px;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  width: 90%;
+  border-radius: 15px;
+  color: #ff7070;
 }
 
 button:hover {
