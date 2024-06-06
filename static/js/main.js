@@ -28,7 +28,7 @@ document.getElementById("create_room_btn").addEventListener("click", () => {
         {},
         function(xhr) {
             if (xhr.status == 200) {
-                window.location.replace('/create_room');
+                window.location.replace('/create');
             } else {
                 document.getElementById('error-message').innerHTML = xhr.response.error;
             }
@@ -57,7 +57,7 @@ send_xhr('POST', '/get_rooms',
             <tbody>`;
         for (const room in xhr.response) {
             let master;
-            if (xhr.response[room].settings.master == -1) {
+            if (xhr.response[room].settings.master == '') {
                 master = '-';
             } else {
                 master = xhr.response[room].settings.master;

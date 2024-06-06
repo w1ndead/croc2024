@@ -1,15 +1,30 @@
-from flask import Flask, render_template, request, redirect, flash, jsonify, make_response, abort
+from flask import Flask
+from flask import render_template
+from flask import jsonify
+from flask import request
+from flask import make_response
+from flask import redirect
+from flask import flash
+from flask import abort
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
+from datetime import timezone
+from datetime import timedelta
 import random
+from flask_socketio import SocketIO
+from flask_socketio import join_room
+from flask_socketio import leave_room
+from flask_socketio import send
+from flask_socketio import emit
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
 
 db_name = 'data.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_name
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
-
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,8 +47,20 @@ rooms = {
     'stariy_bog': {
         'users': {
             0: 'down',
-            1: 'down1',
-            2: 'down2',
+            1: '',
+            2: '',
+            3: '',
+            4: '',
+            5: '',
+            6: '',
+            7: '',
+            8: '',
+            9: ''
+        },
+        'user_sids': {
+            0: '',
+            1: '',
+            2: '',
             3: '',
             4: '',
             5: '',
@@ -44,33 +71,11 @@ rooms = {
         },
         'spectators': [],
         'settings': {
-            'id': 1488,
-            'master': -1,
+            'id': 0,
+            'master': '',
             'status': 'не начато',
-            'host_id': 1,
+            'host': 'tim',
             'privacy_status': 'открытая'
-        }
-    },
-    'tim_loh': {
-        'users': {
-            0: 'down',
-            1: 'down1',
-            2: 'down2',
-            3: 'down3',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
-        },
-        'spectators': ['tim_pidor', 'vasya_umniy'],
-        'settings': {
-            'id': 148852,
-            'master': 'vasya',
-            'status': 'идет игра',
-            'host_id': 2,
-            'privacy_status': 'закрытая'
         }
     }
 }
@@ -300,7 +305,7 @@ def login():
         abort(404)
     return render_template("login.html")
 
-@app.route('/create_room')
+@app.route('/create')
 def create_room():
     if (not check_cookies()):
         return redirect("/")
@@ -315,6 +320,7 @@ def room():
 @app.route('/')
 def main():
     return render_template("main.html")
+
 def check_cookies():
     if request.cookies.get('user_id') and request.cookies.get('token'):
         user_id = request.cookies.get('user_id')
@@ -328,5 +334,52 @@ def check_cookies():
         else:
             return False
 
-if __name__ == "__main__":
-    app.run(debug=True, port=1488)
+@socketio.on('user_joined')
+def on_user_joined(data):
+    print('user joined: ' + str(data))
+    index = 0
+    for i in range(10):
+        if rooms[data['room']]['users'][i] == '':
+            rooms[data['room']]['users'][i] = data['name']
+            rooms[data['room']]['user_sids'][i] = request.sid
+            index = i
+            break
+    print(rooms)
+    join_room(data['room'])
+    emit('user_connected_to_room', {'name': data['name'], 'index': index}, to=data['room'])
+
+@socketio.on('disconnect')
+def on_diconnect():
+    print('user left: ' + request.sid)
+    index = 0
+    room_ = ''
+    name = ''
+    for room in rooms.keys():
+        for i in range(10):
+            if rooms[room]['user_sids'][i] == request.sid:
+                rooms[room]['users'][i] = ''
+                rooms[room]['user_sids'][i] = ''
+                room_ = room
+                index = i
+                break
+        if name != '':
+            break
+    print(rooms)
+    emit('user_disconnected_from_room', {'name': name, 'index': index}, to=room_)
+
+@app.route('/get_users_by_room', methods=['POST'])
+def get_users_by_room():
+    recieved_data = request.json
+    if recieved_data['room'] not in rooms.keys():
+        return jsonify({'error': 'room_not_found'}), 400
+    else:
+        return jsonify({'users': rooms[recieved_data['room']]['users']}), 200
+
+@app.route('/room')
+def page_room():
+    return render_template('room.html')
+
+if __name__ == '__main__':
+    print('SERVER IS RUNNING 😎')
+    # socketio.run(app, debug=True, port=1488, host='192.168.172.200')
+    socketio.run(app, debug=True, port=1488)
