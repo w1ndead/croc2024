@@ -253,6 +253,13 @@ def create_room():
         return redirect("/")
     return render_template("create_room.html")
 
+
+@app.route('/host_lobby')
+def host_lobby():
+    if (not check_cookies()):
+        return redirect("/")
+    return render_template("host_lobby.html")
+
 @app.route('/room')
 def room():
     if (not check_cookies()):
@@ -276,4 +283,4 @@ def check_cookies():
             return False
 
 if __name__ == "__main__":
-    app.run(debug=True, port=1488)
+    app.run(debug=True, host='192.168.73.134', port=1488)

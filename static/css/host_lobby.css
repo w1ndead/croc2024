@@ -1,0 +1,86 @@
+* {
+    font-family: "Montserrat", sans-serif;
+}
+body {
+    /* height: 94vh; */
+    width: 100%;
+
+    background-color: #272727;
+}
+
+.players {
+    width: 40%;
+    height: 85%;
+    margin-left: 5%;
+    
+}
+
+.video {
+    width: 32vw;
+    height: 18vw;
+    display: inline-block;
+    margin-left: 8%;
+}
+
+#cam {
+    border: 1px solid #ff7070;
+    border-radius: 15px;
+}
+
+.num_of_players {
+    width: 100%;
+    color: #ff7070;
+    padding: 1% 2%;
+}
+
+.confirm {
+    width: 100%;
+    color: #ff7070;
+    padding: 1% 1%;
+    background-color: #272727;
+    border: none;
+}
+
+td, th {
+    border: 1px solid #ff7070;
+    border-collapse: collapse;
+    color: #ff7070;
+    padding: 1% 1%;
+}
+
+.cam-players {
+    width: 90%;
+    margin-top: 6%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.start {
+    border: none;
+    width: 10%;
+    background-color: #ff7070;
+    border-radius: 10px;
+    height: 5%;
+    margin-left: 62.5%;
+    margin-top: 1%;
+}
+
+.settings {
+    background-color: #272727;
+    border: none;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+.start:hover {
+    background-color: #fe5c5c;
+}
+
+.applications {
+    width: 35%;
+    margin-left: 50%;
+    margin-top: 5%;
+}
+
+
+
