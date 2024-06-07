@@ -1,10 +1,7 @@
-String.prototype.trim_zeros = function() {
-    return String(this).replace(0, '');
-};
-
 const socket = io(); //'http://127.0.0.1:5000');
-let name_ = '';
-let room = '';
+let username = '';
+let room = get_get_parameter('room');
+let is_host = false;
 
 
 socket.on('connect', () => {
@@ -21,17 +18,18 @@ socket.on('user_disconnected_from_room', function(data) {
     remove_user(parseInt(data['index']) + 1);
 });
 
-document.getElementById('join-btn').
-addEventListener('click', function(event) {
-    event.preventDefault();
-    name_ = document.getElementById('name').value;
-    room = document.getElementById('room').value;
-    show_room(room);
-    socket.emit('user_joined', {
-        'name': name_,
-        'room': room
-    });
-});
+send_xhr(
+    'POST',
+    'get_username_by_id',
+    {
+        'id': getCookie('user_id')
+    },
+    function(xhr) {
+        username = xhr.response.username;
+    }
+);
+
+while (username == '') {}
 
 const show_room = function(room) {
     document.getElementById('join-div').innerHTML = '';
@@ -90,6 +88,34 @@ const send_xhr = function(method, addr, data, handler){
     xhr.send(JSON.stringify(data));
 }
 
+const get_get_parameter = function(parameterName) {
+    let result = null,
+    tmp = [];
+    location.search
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+
+getCookie = function(name) {
+    if (document.cookie.length > 0) {
+        start = document.cookie.indexOf(name + "=");
+        if (start != -1) {
+            start = start + name.length + 1;
+            end = document.cookie.indexOf(";", start);
+            if (end == -1) {
+                end = document.cookie.length;
+            }
+            return document.cookie.substring(start, end);
+        }
+    }
+    return "no_cookie";
+}
+
 const add_user = function(name, index) {
     let id = 'player-' + index;
     document.getElementById(id).innerHTML = name;
@@ -97,22 +123,5 @@ const add_user = function(name, index) {
 
 const remove_user = function(index) {
     let id = 'player-' + index;
-    document.getElementById(id).innerHTML = 'не подключено';
-}
-
-const add_video = function() {
-    //Initialize video
-    const video = document.getElementById('video-1');
-
-    // validate video element
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices
-            .getUserMedia({ video: true })
-            .then((stream) => {
-                video.srcObject = stream;
-            })
-            .catch(function(error) {
-                console.log("Something went wrong!");
-            });
-    }
+    document.getElementById(id).innerHTML = '';
 }

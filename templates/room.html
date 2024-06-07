@@ -13,15 +13,106 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/room.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/host_lobby.css') }}">
     <title>clash mafia</title>
 </head>
 <body>
-    <div id="join-div">
-        <input type="text" placeholder="name" id="name">
-        <input type="text" placeholder="room" id="room">
-        <button id="join-btn">join</button>
+    <div class="cam-players">
+        <div class="video">
+            <table class="num_of_players">
+                <tbody>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+
+                    <tr>
+                        <th scope="row">example_name2</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                    <tr>
+                        <th scope="row">example_name1</th>
+                        <td><button class="confirm">✅</button></td>
+                        <!-- <td><button class="confirm">❌</button></td> -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="video" id="cam">
+        </div>
     </div>
-    <div id="room"></div>
+    <button class="start">Начать игру</button>
+    <button class="settings">⚙️</button>
+    <table class="applications">
+        <tbody>
+            <tr>
+                <th scope="row">Заявка example_name1</th>
+                <td><button class="confirm">✅</button></td>
+                <td><button class="confirm">❌</button></td>
+            </tr>
+
+            <tr>
+                <th scope="row">Заявка example_name2</th>
+                <td><button class="confirm">✅</button></td>
+                <td><button class="confirm">❌</button></td>
+            </tr>
+
+            <tr>
+                <th scope="row">Заявка example_name1</th>
+                <td><button class="confirm">✅</button></td>
+                <td><button class="confirm">❌</button></td>
+            </tr>
+            <tr>
+                <th scope="row">Заявка example_name1</th>
+                <td><button class="confirm">✅</button></td>
+                <td><button class="confirm">❌</button></td>
+            </tr>
+            <tr>
+                <th scope="row">Заявка example_name1</th>
+                <td><button class="confirm">✅</button></td>
+                <td><button class="confirm">❌</button></td>
+            </tr>
+
+        </tbody>
+    </table>
     <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 </body>
 </html>

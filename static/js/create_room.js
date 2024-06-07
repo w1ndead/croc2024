@@ -13,7 +13,7 @@ document.getElementById("create_room-btn").addEventListener("click", () => {
     let room_name = document.getElementById('room_name').value;
     let master = document.getElementById('master').value;
     let privacy = document.getElementById('privacy').value;
-    send_xhr('POST', '/create_room_btn',
+    send_xhr('POST', '/create_room',
         {
             'room_name': room_name,
             'master': master,
@@ -21,7 +21,7 @@ document.getElementById("create_room-btn").addEventListener("click", () => {
         },
         function(xhr) {
             if (xhr.status == 200) {
-                window.location.replace('/room');
+                window.location.replace('/room?room=' + room_name + '&t=plyer');
             } else {
                 document.getElementById('error-message').innerHTML = xhr.response.error;
             }
