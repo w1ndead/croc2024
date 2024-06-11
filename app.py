@@ -45,7 +45,8 @@ class Session(db.Model):
 
 rooms = {
     'stariy_bog': {
-        'users': {
+        'users_waiting': [], # {'username', 'user_sid'}
+        'users': { # {'username', 'user_sid', 'role', 'is_alive'}
             0: '',
             1: '',
             2: '',
@@ -57,19 +58,7 @@ rooms = {
             8: '',
             9: ''
         },
-        'user_sids': {
-            0: '',
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
-        },
-        'spectators': [],
+        'spectators': [], # {'username', 'user_sid'}
         'settings': {
             'id': 0,
             'master': '',
@@ -353,7 +342,7 @@ def create_room():
     rec_data = request.json
     print(rec_data)
     if not check_cookies():
-        return jsonify({'error': 'cookies_error'}), 403
+        return abort(403)
     if rec_data['room_name'] in rooms.keys():
         return jsonify({'error': 'room_name_exists'}), 400
     if len(rec_data['room_name']) < 3:
@@ -368,33 +357,22 @@ def create_room():
     if rec_data['privacy'] == 'private':
         privacy_status = 'закрытая'
     rooms[rec_data['room_name']] = {
+        'users_waiting': [],
         'users': {
-            0: '',
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
-        },
-        'user_sids': {
-            0: '',
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
+            0: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            1: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            2: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            3: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            4: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            5: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            6: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            7: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            8: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
+            9: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''}
         },
         'spectators': [],
         'settings': {
-            'id': len(rooms.keys()),
+            'id': 0,
             'master': '',
             'master_exists': master_exists,
             'status': 'не начато',
@@ -403,7 +381,17 @@ def create_room():
         }
     }
     return jsonify({}), 200
-    
+
+@app.route('/check_if_host', methods=['POST'])
+def check_if_host():
+    if not check_cookies():
+        return abort(403)
+    rec_data = request.json
+    room = rec_data['room']
+    user = User.query.filter_by(id=rec_data['user_id']).first()
+    if rooms[room]['settings']['host'] == user.username:
+        return jsonify({'if_host': True, 'username': user.username})
+
 @socketio.on('user_joined')
 def on_user_joined(data):
     print('user joined: ' + str(data))

@@ -21,7 +21,7 @@ document.getElementById("create_room-btn").addEventListener("click", () => {
         },
         function(xhr) {
             if (xhr.status == 200) {
-                window.location.replace('/room?room=' + room_name + '&t=plyer');
+                window.location.replace('/room?room=' + room_name + '&t=player');
             } else {
                 document.getElementById('error-message').innerHTML = xhr.response.error;
             }
