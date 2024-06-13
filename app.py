@@ -43,43 +43,7 @@ class Session(db.Model):
     def __repr__(self):
         return '<Session %r>' % self.id
 
-rooms = {
-    'stariy_bog': {
-        'users': {
-            0: '',
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
-        },
-        'user_sids': {
-            0: '',
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
-        },
-        'spectators': [],
-        'settings': {
-            'id': 0,
-            'master': '',
-            'master_exists': True,
-            'status': 'не начато',
-            'host': 'tim',
-            'privacy_status': 'открытая'
-        }
-    }
-}
+rooms = {}
 
 @app.route('/get_rooms', methods=['GET', 'POST'])
 def get_rooms():
@@ -99,32 +63,6 @@ def check_if_loggined_create_room_btn():
             'error' : '!Вы не авторизованы!'
         }
         return jsonify(data), 400
-
-@app.route('/create_room_btn', methods=['GET', 'POST'])
-def create_room_btn():
-    if (request.method == "GET"):
-        abort(404)
-    rec_data = request.json
-    room_name = rec_data['room_name']
-    master = rec_data['master']
-    privacy = rec_data['privacy']
-    if (len(room_name) < 3):
-        data = {
-            'error' : 'Название комнаты очень короткое'
-        }
-        return jsonify(data), 400
-    if (len(room_name) > 25):
-        data = {
-            'error' : 'Название комнаты слишком длинное'
-        }
-        return jsonify(data), 400
-    print(room_name, master, privacy)
-    data = {
-        'room_name' : room_name,
-        'host' : master,
-        'privacy' : privacy
-    }
-    return jsonify(data), 200
 
 @app.route('/logout_btn', methods=['GET', 'POST'])
 def logout_btn():
@@ -330,6 +268,12 @@ def room():
     if (not check_cookies()):
         return redirect("/")
     return render_template("room.html")
+
+@app.route('/player_room')
+def player_room():
+    if (not check_cookies()):
+        return redirect("/")
+    return render_template("player_room.html")
 
 @app.route('/')
 def main():

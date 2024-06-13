@@ -67,7 +67,7 @@ send_xhr('POST', '/get_rooms',
                     {},
                     function(xhr) {
                         if (xhr.status == 200) {
-                            window.location.replace(`/room?room=${document.getElementsByClassName("enter_btn")[i].id}`);
+                            window.location.replace(`/player_room?room=${document.getElementsByClassName("enter_btn")[i].id}`);
                         } else {
                             document.getElementById('error-message').innerHTML = xhr.response.error;
                         }
@@ -81,7 +81,7 @@ send_xhr('POST', '/get_rooms',
                     {},
                     function(xhr) {
                         if (xhr.status == 200) {
-                            window.location.replace(`/room?room=${document.getElementsByClassName("view_enter_btn")[i].id}`);
+                            window.location.replace(`/player_room?room=${document.getElementsByClassName("view_enter_btn")[i].id}`);
                         } else {
                             document.getElementById('error-message').innerHTML = xhr.response.error;
                         }
