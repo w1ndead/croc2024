@@ -1,23 +1,20 @@
 const socket = io();
 
-const player = async function() {
+const player = function() {
     let username = '';
     let room = get_get_parameter('room');
     let is_host = false;
     let has_game_started = false;
-    send_xhr(
-        'POST',
-        '/check_if_host',
-        {
-            'user_id': get_cookie('user_id'),
-            'room': get_get_parameter('room')
-        },
-        function(xhr) {
-            username = xhr.response.username;
-            is_host = xhr.response.is_host;
-            console.log(username);
-        }
-    );
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/check_if_host');
+    xhr.responseType = "json";
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onload = () => {
+        username = xhr.response.username;
+        is_host = xhr.response.is_host;
+    };
+    xhr.send(JSON.stringify({'room': room, 'user_id': get_cookie('user_id')}));
+    console.log(username);
 }
 
 const spectator = function() {
