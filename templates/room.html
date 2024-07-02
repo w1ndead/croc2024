@@ -20,99 +20,14 @@
     <div class="cam-players">
         <div class="video">
             <table class="num_of_players">
-                <tbody>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-
-                    <tr>
-                        <th scope="row">example_name2</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                    <tr>
-                        <th scope="row">example_name1</th>
-                        <td><button class="confirm">✅</button></td>
-                        <!-- <td><button class="confirm">❌</button></td> -->
-                    </tr>
-                </tbody>
+                <tbody id="players_waiting"></tbody>
             </table>
         </div>
-        <div class="video" id="cam">
+        <div class="video" id="cam"></div>
+        <div class="info">
+            <h1>Ожидайте пока вашу заявку рассмотрят...</h1>
         </div>
     </div>
-    <button class="start">Начать игру</button>
-    <button class="settings">⚙️</button>
-    <table class="applications">
-        <tbody>
-            <tr>
-                <th scope="row">Заявка example_name1</th>
-                <td><button class="confirm">✅</button></td>
-                <td><button class="confirm">❌</button></td>
-            </tr>
-
-            <tr>
-                <th scope="row">Заявка example_name2</th>
-                <td><button class="confirm">✅</button></td>
-                <td><button class="confirm">❌</button></td>
-            </tr>
-
-            <tr>
-                <th scope="row">Заявка example_name1</th>
-                <td><button class="confirm">✅</button></td>
-                <td><button class="confirm">❌</button></td>
-            </tr>
-            <tr>
-                <th scope="row">Заявка example_name1</th>
-                <td><button class="confirm">✅</button></td>
-                <td><button class="confirm">❌</button></td>
-            </tr>
-            <tr>
-                <th scope="row">Заявка example_name1</th>
-                <td><button class="confirm">✅</button></td>
-                <td><button class="confirm">❌</button></td>
-            </tr>
-
-        </tbody>
-    </table>
     <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 </body>
 </html>

@@ -1,11 +1,12 @@
 * {
     font-family: "Montserrat", sans-serif;
+    background-color: #ffffff;
 }
 body {
     /* height: 94vh; */
     width: 100%;
 
-    background-color: #272727;
+    background-color: #ffffff;
 }
 
 .players {
@@ -23,28 +24,36 @@ body {
 }
 
 #cam {
-    border: 1px solid #ff7070;
+    border: 1px solid #000000;
     border-radius: 15px;
 }
 
 .num_of_players {
     width: 100%;
-    color: #ff7070;
+    color: #000000;
     padding: 1% 2%;
 }
 
 .confirm {
     width: 100%;
-    color: #ff7070;
+    color: #000000;
     padding: 1% 1%;
-    background-color: #272727;
+    background-color: #ffffff;
+    border: none;
+}
+
+.decline {
+    width: 100%;
+    color: #000000;
+    padding: 1% 1%;
+    background-color: #ffffff;
     border: none;
 }
 
 td, th {
-    border: 1px solid #ff7070;
+    border: 1px solid #000000;
     border-collapse: collapse;
-    color: #ff7070;
+    color: #000000;
     padding: 1% 1%;
 }
 
@@ -58,7 +67,7 @@ td, th {
 .start {
     border: none;
     width: 10%;
-    background-color: #ff7070;
+    background-color: #77e577;
     border-radius: 10px;
     height: 5%;
     margin-left: 62.5%;
@@ -66,7 +75,7 @@ td, th {
 }
 
 .settings {
-    background-color: #272727;
+    background-color: #ffffff;
     border: none;
     font-size: 20px;
     border-radius: 5px;
@@ -81,6 +90,3 @@ td, th {
     margin-left: 50%;
     margin-top: 5%;
 }
-
-
-

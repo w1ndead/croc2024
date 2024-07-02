@@ -1,14 +1,13 @@
 * {
-    background-color: #272727;
+    background-color: #ffffff;
     font-family: "Montserrat", sans-serif;
-}
-
-body {
-    background-color: #272727;
-    color: #FF7070;
-}
-
-.rooms {
+  }
+  
+  body {
+    background-color: #ffffff;
+  }
+  
+  .rooms {
     width: 80%;
     height: 50%;
     align-items: center;
@@ -16,40 +15,64 @@ body {
     margin-left: 10%;
     margin-right: 10%;
     margin-top: 3%;
-}
-
-.rooms td,.rooms th {
+  }
+  
+  .rooms td,.rooms th {
     padding: 1% 0.25%;
-}
-
-.enter_btn {
+  }
+  
+  .button {
+    border: none;
+    background-color: #8AEC8A;
+    height: 30px;
+    color: #000000;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 0px 10px;
+    cursor: pointer;
+  }
+  
+  .enter_btn {
     border: none;
     width: 90%;
     height: 100%;
-    background-color: #FF7070;
-    color: #272727;
+    background-color: #8AEC8A;
+    color: #000000;
     border-radius: 10px;
     margin-top: -1%;
-}
-
-.view_enter_btn {
+  }
+  
+  .view_enter_btn {
     border: none;
     width: 70%;
     height: 100% + 2px;
-    background-color: #FF7070;
-    color: #272727;
+    background-color: #8AEC8A;
+    color: #000000;
     border-radius: 10px;
     margin-top: -1%;
     margin-left: -20%;
-}
-
-.btn {
+  }
+  
+  .enter_btn:hover {
+    color: #000000;
+    background-color: #77e577;
+  }
+  
+  .view_enter_btn:hover {
+    color: #000000;
+    background-color: #77e577;
+  }
+  
+  .btn {
     box-shadow: none;
     border:none;
     width: 110%;
     height: 60%;
-    color: #272727;
-    background-color: #FF7070;
+    color: #000000;
+    background-color: #8AEC8A;
     border-radius: 10px;
     letter-spacing: 1.3px;
     display: block;
@@ -58,17 +81,17 @@ body {
     margin-top: 8%;
     font-size: 70%;
     text-align: center;
-}
-
-.create-btn {
+  }
+  
+  .create-btn {
     box-shadow: none;
     border:none;
     width: 20%;
     height: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
-    color: #272727;
-    background-color: #FF7070;
+    color: #000000;
+    background-color: #8AEC8A;
     border-radius: 20px;
     display: block;
     margin-left: auto;
@@ -77,19 +100,19 @@ body {
     font-size: 60%;
     text-align: center;
     font-size: 20px;
-}
-
-.create-btn:hover {
-    color: #272727;
-    background-color: #fe5c5c;
-}
-
-.btn:hover {
-    color: #272727;
-    background-color: #fe5c5c;
-}
-
-.error {
+  }
+  
+  .create-btn:hover {
+    color: #000000;
+    background-color: #77e577;
+  }
+  
+  .btn:hover {
+    color: #000000;
+    background-color: #77e577;
+  }
+  
+  .error {
     width: 100%;
     text-align: center;
-}
+  }

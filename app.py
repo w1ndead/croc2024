@@ -46,6 +46,7 @@ class Session(db.Model):
 rooms = {
     'stariy_bog': {
         'users_waiting': [], # {'username', 'user_sid'}
+        'user_join_requests': [], # {'username', 'user_sid'}
         'users': { # {'username', 'user_sid', 'role', 'is_alive'}
             0: '',
             1: '',
@@ -65,7 +66,7 @@ rooms = {
             'master_exists': True,
             'status': 'не начато',
             'host': 'tim',
-            'privacy_status': 'открытая'
+            'privacy_status': 'закрытая'
         }
     }
 }
@@ -390,42 +391,58 @@ def check_if_host():
     room = rec_data['room']
     user = User.query.filter_by(id=rec_data['user_id']).first()
     if rooms[room]['settings']['host'] == user.username:
-        return jsonify({'if_host': True, 'username': user.username})
+        return user.username + ',true'
+    else:
+        return user.username + ',false'
 
-@socketio.on('user_joined')
-def on_user_joined(data):
-    print('user joined: ' + str(data))
-    index = 0
-    for i in range(10):
-        if rooms[data['room']]['users'][i] == '':
-            rooms[data['room']]['users'][i] = data['name']
-            rooms[data['room']]['user_sids'][i] = request.sid
-            index = i
+@socketio.on('join_request_declined')
+def on_join_request_declined(data):
+    user_sid = data['user_sid']
+    room = data['room']
+    for i in range(len(rooms[room]['user_join_requests'])):
+        if rooms[room]['user_join_requests'][i]['user_sid'] == user_sid:
+            rooms[room]['user_join_requests'].pop(i)
             break
-    print(rooms)
-    join_room(data['room'])
-    emit('user_connected_to_room', {'name': data['name'], 'index': index}, to=data['room'])
+    emit('user_join_request_was_declined', {}, to=user_sid)
 
-@socketio.on('disconnect')
-def on_diconnect():
-    print('user left: ' + request.sid)
-    index = 0
-    room_ = ''
-    name = ''
-    for room in rooms.keys():
-        for i in range(10):
-            if rooms[room]['user_sids'][i] == request.sid:
-                rooms[room]['users'][i] = ''
-                rooms[room]['user_sids'][i] = ''
-                room_ = room
-                index = i
+@socketio.on('join_request_confirmed')
+def on_join_request_confirmed(data):
+    user_sid = data['user_sid']
+    room = data['room']
+    username = ''
+    for i in range(len(rooms[room]['user_join_requests'])):
+        if rooms[room]['user_join_requests'][i]['user_sid'] == user_sid:
+            username = rooms[room]['user_join_requests'][i]['username']
+            rooms[room]['user_join_requests'].pop(i)
+            break
+    rooms[room]['users_waiting'].append({'username': username, 'user_sid': user_sid})
+    emit('user_joined', {'username': username, 'user_sid': user_sid}, to=room)
+    emit('user_join_request_was_confirmed', {}, to=user_sid)
+
+@socketio.on('user_requested_joining')
+def on_user_requested_joining(data):
+    print('user requested joining: ' + str(data))
+    room = data['room']
+    username = data['username']
+    sid = request.sid
+    if rooms[room]['settings']['privacy_status'] == 'открытая' or username == rooms[room]['settings']['host']:
+        rooms[room]['users_waiting'].append({'username': username, 'user_sid': sid})
+        join_room(room)
+        print('user_joined' + str({'username': username, 'user_sid': sid}))
+        emit('user_joined', {'username': username, 'user_sid': sid}, to=room)
+        emit('user_join_request_was_confirmed', {}, to=sid)
+    else:
+        rooms[room]['user_join_requests'].append({'username': username, 'user_sid': sid})
+        join_room(room)
+        host_sid = ''
+        for user in rooms[room]['users_waiting']:
+            if user['username'] == rooms[room]['settings']['host']:
+                host_sid = user['user_sid']
                 break
-        if name != '':
-            break
-    print(rooms)
-    emit('user_disconnected_from_room', {'name': name, 'index': index}, to=room_)
+            print('user_sent_join_request' + str({'username': username, 'user_sid': sid}))
+        emit('user_sent_join_request', {'username': username, 'user_sid': sid}, to=host_sid)
 
-@app.route('/get_username_by_id')
+@app.route('/get_username_by_id', methods=['POST'])
 def get_username_by_id():
     rec_data = request.json()
     if not check_cookies(request):
@@ -433,13 +450,13 @@ def get_username_by_id():
     user = User.query.filter_by(id=rec_data['id']).first()
     return jsonify({'username': user.username}), 200
 
-@app.route('/get_users_by_room', methods=['POST'])
+@app.route('/get_waiting_users_by_room', methods=['POST'])
 def get_users_by_room():
     recieved_data = request.json
     if recieved_data['room'] not in rooms.keys():
         return jsonify({'error': 'room_not_found'}), 400
     else:
-        return jsonify({'users': rooms[recieved_data['room']]['users']}), 200
+        return jsonify({'users': rooms[recieved_data['room']]['users_waiting']}), 200
 
 @app.route('/room')
 def page_room():

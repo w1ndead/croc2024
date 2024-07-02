@@ -9,6 +9,23 @@ function send_xhr(method, addr, data, handler){
     xhr.send(JSON.stringify(data));
 }
 
+const get_get_parameter = function(parameterName) {
+    let result = null,
+    tmp = [];
+    location.search
+            .substr(1)
+            .split("&")
+            .forEach(function (item) {
+            tmp = item.split("=");
+            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
+        });
+    return result;
+}
+
+if (get_get_parameter('msg') == 'request_declined') {
+    alert('Ваша заявка была откланена')
+}
+
 let count_rooms = 0;
 
 send_xhr('POST', '/get_rooms',

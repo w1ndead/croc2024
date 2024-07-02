@@ -1,81 +1,95 @@
 * {
-  background-color: #272727;
+  background-color: #ffffff;
   font-family: "Montserrat", sans-serif;
 }
 
 input[type=text], input[type=password] {
-  width: 90%;
+  width: 100%;
   padding: 15px;
   margin: 3px 20px 22px 0;
   display: inline-block;
-  background-color: #272727;
-  color: #ffffff;
-  border: 2px solid #ff7070;
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #000000;
   border-radius: 15px;
 }
 
 input[type=text]:focus, input[type=password]:focus {
-  background-color: #3e3e3e;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   outline: none;
 }
 
 .lgnbutton {
-background-color: #04AA6D;
-padding: 14px 20px;
-text-align: center;
-border: none;
-cursor: pointer;
-border-radius: 15px;
-width: 90%;
-}
-
-.regbutton {
-  background-color: #272727;
-  padding: 14px 0px;
-  text-align: center;
+  background-color: #8AEC8A;
+  margin-left: 20%;
+  color: #000000;
+  padding: 14px 20px;
   border: none;
   cursor: pointer;
-  width: 90%;
+  width: 60%;
   border-radius: 15px;
-  color: #ff7070;
 }
 
-button:hover {
-opacity: 0.8;
+.lgnbutton:hover {
+  color: #000000;
+  background-color: #77e577;
 }
 
 span.psw {
-float: right;
+  float: right;
 }
 
 p {
-  color: #ff7070;
-  background-color: #272727;
+  color: #000000;
+  background-color: #ffffff;
 }
 
-.log-in {
+.create_room {
   border: none;
-  width: 33%;
-  margin-left: 34%;
-  margin-top: 10px;
-  height: 70%;
+  width: 30%;
+  height: 60%;
+  margin-left: 35%;
   border-radius: 20px;
-  display: flex;
   align-items: center;
-  align-content: center;
-  justify-content: center;
 }
 
 .vhod {
-text-align: center;
+  text-align: center;
 }
 
 .esh {
   margin-top: -25px;
-  background-color: #272727;
+  background-color: #ffffff;
 }
 
 .enter {
-  color: #ff7070;
+  color: #000000;
+  margin-top: 5%;
+}
+
+option {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+select {
+  color: #000000;
+  background-color: #ffffff;
+}
+
+.regbutton {
+  background-color: #ffffff;
+  margin-left: 20%;
+  color: #000000;
+  padding: 14px 20px;
+  border: none;
+  cursor: pointer;
+  width: 60%;
+  border-radius: 15px;
+  text-align: center;
+}
+
+a {
+  background-color: white;
 }

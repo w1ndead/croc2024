@@ -1,24 +1,96 @@
 const socket = io();
 
 const player = function() {
-    let username = '';
     let room = get_get_parameter('room');
-    let is_host = false;
-    let has_game_started = false;
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/check_if_host');
-    xhr.responseType = "json";
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onload = () => {
-        username = xhr.response.username;
-        is_host = xhr.response.is_host;
-    };
-    xhr.send(JSON.stringify({'room': room, 'user_id': get_cookie('user_id')}));
-    console.log(username);
+    let xhr = send_and_get_xhr('POST', '/check_if_host', {'room': room, 'user_id': get_cookie('user_id')});
+    let username = xhr.response.split(',')[0];
+    let if_host = xhr.response.split(',')[1];
+    
+    if (if_host == 'true') {
+        add_host_html();
+    }
+    
+    socket.emit('user_requested_joining', {'room': room, 'username': username});
+    
+    socket.on('user_joined', function(data) {
+        add_user_to_waiting_list(data['username'])
+    });
+    
+    socket.on('user_join_request_was_confirmed', function(data) {
+        document.getElementsByClassName('info')[0].innerHTML = '';
+    });
+    
+    socket.on('user_join_request_was_declined', function(data) {
+        window.location.replace('/?msg=request_declined')
+    });
+    
+    if (if_host == 'true') {
+        socket.on('user_sent_join_request', function(data) {
+            add_user_to_request_list(data['username'], data['user_sid'], room)
+        });
+    }
+    
+    send_xhr(
+        'POST',
+        '/get_waiting_users_by_room',
+        {
+            'room': room
+        },
+        function(xhr) {
+            if (xhr.status != 200) {
+                console.log(xhr.status);
+            } else {
+                console.log(xhr.response)
+                for (let user of xhr.response.users) {
+                    add_user_to_waiting_list(user.username)
+                }
+            }
+        }
+    );
 }
 
-const spectator = function() {
-    
+const add_user_to_request_list = function(username, sid, room) {
+    document.getElementById('requests').
+    innerHTML += `
+        <tr sid="${sid}">
+            <th scope="row">Заявка ${username}</th>
+            <td><button class="confirm" sid="${sid}">✅</button></td>
+            <td><button class="decline" sid="${sid}">❌</button></td>
+        </tr>
+    `;
+    document.querySelector(`[sid="${sid}"][class="confirm"]`).
+    addEventListener('click', () => {
+        socket.emit('join_request_confirmed', {'user_sid': sid, 'room': room});
+        let el = document.querySelector(`tr[sid="${sid}"]`);
+        el.remove();
+    });
+    document.querySelector(`[sid="${sid}"][class="decline"]`).
+    addEventListener('click', () => {
+        socket.emit('join_request_declined', {'user_sid': sid, 'room': room});
+        let el = document.querySelector(`tr[sid="${sid}"]`);
+        el.remove();
+    });
+}
+
+const add_user_to_waiting_list = function(username) {
+    document.getElementById('players_waiting').innerHTML += `
+        <tr>
+            <th scope="row">${username}</th>
+        </tr>
+    `
+}
+
+const add_host_html = function() {
+    document.getElementsByClassName('info')[0].innerHTML = '';
+    let body = document.getElementsByTagName('body')[0];
+    body.innerHTML += `
+        <button class="start">Начать игру</button>
+        <button class="settings">⚙️</button>
+        <table class="applications">
+            <tbody id="requests">
+            </tbody>
+        </table>
+    `;
 }
 
 const show_room = function(room) {
@@ -67,17 +139,7 @@ const show_room = function(room) {
     );
 }
 
-const add_user = function(name, index) {
-    let id = 'player-' + index;
-    document.getElementById(id).innerHTML = name;
-}
-    
-const remove_user = function(index) {
-    let id = 'player-' + index;
-    document.getElementById(id).innerHTML = '';
-}
-
-const send_xhr = function(method, addr, data, handler){
+const send_xhr = function(method, addr, data, handler) {
     let xhr = new XMLHttpRequest();
     xhr.open(method, addr);
     xhr.responseType = "json";
@@ -86,6 +148,14 @@ const send_xhr = function(method, addr, data, handler){
         handler(xhr);
     };
     xhr.send(JSON.stringify(data));
+}
+
+const send_and_get_xhr = function(method, addr, data) {
+    let xhr = new XMLHttpRequest();
+    xhr.open(method, addr, false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(JSON.stringify(data));
+    return xhr;
 }
 
 const get_get_parameter = function(parameterName) {
