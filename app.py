@@ -1,30 +1,15 @@
-from flask import Flask
-from flask import render_template
-from flask import jsonify
-from flask import request
-from flask import make_response
-from flask import redirect
-from flask import flash
-from flask import abort
+from flask import Flask, render_template, request, redirect, flash, jsonify, make_response, abort
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-from datetime import timezone
-from datetime import timedelta
+from datetime import datetime, timezone, timedelta
 import random
-from flask_socketio import SocketIO
-from flask_socketio import join_room
-from flask_socketio import leave_room
-from flask_socketio import send
-from flask_socketio import emit
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
 
 db_name = 'data.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_name
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -43,14 +28,6 @@ class Session(db.Model):
     def __repr__(self):
         return '<Session %r>' % self.id
 
-rooms = {}
-
-@app.route('/get_rooms', methods=['GET', 'POST'])
-def get_rooms():
-    if (request.method == "GET"):
-        abort(404)
-    return jsonify(rooms)
-
 @app.route('/check_if_loggined_create_room_btn', methods=['GET', 'POST'])
 def check_if_loggined_create_room_btn():
     if (request.method == "GET"):
@@ -63,6 +40,32 @@ def check_if_loggined_create_room_btn():
             'error' : '!Вы не авторизованы!'
         }
         return jsonify(data), 400
+
+@app.route('/create_room_btn', methods=['GET', 'POST'])
+def create_room_btn():
+    if (request.method == "GET"):
+        abort(404)
+    rec_data = request.json
+    room_name = rec_data['room_name']
+    master = rec_data['master']
+    privacy = rec_data['privacy']
+    if (len(room_name) < 3):
+        data = {
+            'error' : 'Название комнаты очень короткое'
+        }
+        return jsonify(data), 400
+    if (len(room_name) > 25):
+        data = {
+            'error' : 'Название комнаты слишком длинное'
+        }
+        return jsonify(data), 400
+    print(room_name, master, privacy)
+    data = {
+        'room_name' : room_name,
+        'host' : master,
+        'privacy' : privacy
+    }
+    return jsonify(data), 200
 
 @app.route('/logout_btn', methods=['GET', 'POST'])
 def logout_btn():
@@ -244,21 +247,8 @@ def login():
         abort(404)
     return render_template("login.html")
 
-@app.route('/check_if_loggined_enter_btn', methods=['GET', 'POST'])
-def check_if_loggined_enter_btn():
-    if (request.method == "GET"):
-        abort(404)
-    if check_cookies():
-        data = {}
-        return jsonify(data), 200
-    else:
-        data = {
-            'error' : '!Вы не можете зайти в игру, пока не авторизованы!'
-        }
-        return jsonify(data), 400
-
-@app.route('/create')
-def create():
+@app.route('/create_room')
+def create_room():
     if (not check_cookies()):
         return redirect("/")
     return render_template("create_room.html")
@@ -269,16 +259,9 @@ def room():
         return redirect("/")
     return render_template("room.html")
 
-@app.route('/player_room')
-def player_room():
-    if (not check_cookies()):
-        return redirect("/")
-    return render_template("player_room.html")
-
 @app.route('/')
 def main():
     return render_template("main.html")
-
 def check_cookies():
     if request.cookies.get('user_id') and request.cookies.get('token'):
         user_id = request.cookies.get('user_id')
@@ -292,116 +275,9 @@ def check_cookies():
         else:
             return False
 
-@app.route('/create_room', methods=['POST'])
-def create_room():
-    rec_data = request.json
-    print(rec_data)
-    if not check_cookies():
-        return jsonify({'error': 'cookies_error'}), 403
-    if rec_data['room_name'] in rooms.keys():
-        return jsonify({'error': 'room_name_exists'}), 400
-    if len(rec_data['room_name']) < 3:
-        return jsonify({'error': 'too_short_room_name'}), 400
-    if len(rec_data['room_name']) > 25:
-        return jsonify({'error': 'too_long_room_name'}), 400
-    user = User.query.filter_by(id=request.cookies.get('user_id')).first()
-    master_exists = False
-    if master_exists == 'with_master':
-        master_exists = True
-    privacy_status = 'открытая'
-    if rec_data['privacy'] == 'private':
-        privacy_status = 'закрытая'
-    rooms[rec_data['room_name']] = {
-        'users': {
-            0: '',
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
-        },
-        'user_sids': {
-            0: '',
-            1: '',
-            2: '',
-            3: '',
-            4: '',
-            5: '',
-            6: '',
-            7: '',
-            8: '',
-            9: ''
-        },
-        'spectators': [],
-        'settings': {
-            'id': len(rooms.keys()),
-            'master': '',
-            'master_exists': master_exists,
-            'status': 'не начато',
-            'host': user.username,
-            'privacy_status': privacy_status
-        }
-    }
-    return jsonify({}), 200
-    
-@socketio.on('user_joined')
-def on_user_joined(data):
-    print('user joined: ' + str(data))
-    index = 0
-    for i in range(10):
-        if rooms[data['room']]['users'][i] == '':
-            rooms[data['room']]['users'][i] = data['name']
-            rooms[data['room']]['user_sids'][i] = request.sid
-            index = i
-            break
-    print(rooms)
-    join_room(data['room'])
-    emit('user_connected_to_room', {'name': data['name'], 'index': index}, to=data['room'])
-
-@socketio.on('disconnect')
-def on_diconnect():
-    print('user left: ' + request.sid)
-    index = 0
-    room_ = ''
-    name = ''
-    for room in rooms.keys():
-        for i in range(10):
-            if rooms[room]['user_sids'][i] == request.sid:
-                rooms[room]['users'][i] = ''
-                rooms[room]['user_sids'][i] = ''
-                room_ = room
-                index = i
-                break
-        if name != '':
-            break
-    print(rooms)
-    emit('user_disconnected_from_room', {'name': name, 'index': index}, to=room_)
-
-@app.route('/get_username_by_id')
-def get_username_by_id():
-    rec_data = request.json()
-    if not check_cookies(request):
-        abort(403)
-    user = User.query.filter_by(id=rec_data['id']).first()
-    return jsonify({'username': user.username}), 200
-
-@app.route('/get_users_by_room', methods=['POST'])
-def get_users_by_room():
-    recieved_data = request.json
-    if recieved_data['room'] not in rooms.keys():
-        return jsonify({'error': 'room_not_found'}), 400
-    else:
-        return jsonify({'users': rooms[recieved_data['room']]['users']}), 200
-
-@app.route('/room')
-def page_room():
+@app.route('/lobby')
+def lobby():
     return render_template('room.html')
 
-if __name__ == '__main__':
-    print('SERVER IS RUNNING 😎')
-    # socketio.run(app, debug=True, port=1488, host='192.168.172.200')
-    socketio.run(app, debug=True, port=1488)
+if __name__ == "__main__":
+    app.run(debug=True, port=1488)

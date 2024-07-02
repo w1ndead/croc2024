@@ -1,35 +1,28 @@
-const socket = io(); //'http://127.0.0.1:5000');
-let username = '';
-let room = get_get_parameter('room');
-let is_host = false;
+const socket = io();
 
+const player = async function() {
+    let username = '';
+    let room = get_get_parameter('room');
+    let is_host = false;
+    let has_game_started = false;
+    send_xhr(
+        'POST',
+        '/check_if_host',
+        {
+            'user_id': get_cookie('user_id'),
+            'room': get_get_parameter('room')
+        },
+        function(xhr) {
+            username = xhr.response.username;
+            is_host = xhr.response.is_host;
+            console.log(username);
+        }
+    );
+}
 
-socket.on('connect', () => {
-    console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-});
-
-socket.on('user_connected_to_room', function(data) {
-    console.log('user connected: ' + data['name'] + ' ' + data['index']);
-    add_user(data['name'], parseInt(data['index']) + 1);
-});
-
-socket.on('user_disconnected_from_room', function(data) {
-    console.log('user disconnected: ' + data['name'] + ' ' + data['index']);
-    remove_user(parseInt(data['index']) + 1);
-});
-
-send_xhr(
-    'POST',
-    'get_username_by_id',
-    {
-        'id': getCookie('user_id')
-    },
-    function(xhr) {
-        username = xhr.response.username;
-    }
-);
-
-while (username == '') {}
+const spectator = function() {
+    
+}
 
 const show_room = function(room) {
     document.getElementById('join-div').innerHTML = '';
@@ -75,7 +68,17 @@ const show_room = function(room) {
             }
         }
     );
-};
+}
+
+const add_user = function(name, index) {
+    let id = 'player-' + index;
+    document.getElementById(id).innerHTML = name;
+}
+    
+const remove_user = function(index) {
+    let id = 'player-' + index;
+    document.getElementById(id).innerHTML = '';
+}
 
 const send_xhr = function(method, addr, data, handler){
     let xhr = new XMLHttpRequest();
@@ -101,7 +104,7 @@ const get_get_parameter = function(parameterName) {
     return result;
 }
 
-getCookie = function(name) {
+const get_cookie = function(name) {
     if (document.cookie.length > 0) {
         start = document.cookie.indexOf(name + "=");
         if (start != -1) {
@@ -116,12 +119,13 @@ getCookie = function(name) {
     return "no_cookie";
 }
 
-const add_user = function(name, index) {
-    let id = 'player-' + index;
-    document.getElementById(id).innerHTML = name;
-}
+socket.on('connect', () => {
+    console.log(socket.id);
+});
 
-const remove_user = function(index) {
-    let id = 'player-' + index;
-    document.getElementById(id).innerHTML = '';
+if (get_get_parameter('t') == 'player') {
+    player()
+} else if (get_get_parameter('t') == 'spectator') {
+    spectator()
 }
+        

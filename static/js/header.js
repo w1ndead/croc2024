@@ -12,6 +12,7 @@ send_xhr('POST', '/check_if_user_logged',
     {},
     function(xhr) {
         html = ``;
+        console.log(xhr.response.check)
         if (xhr.response.check) {
             html += `
             <p class="username">${xhr.response.username}</p>
@@ -19,7 +20,7 @@ send_xhr('POST', '/check_if_user_logged',
         } else {
             html += `
             <a href="/login" class="barak">Вход</a>
-            <a href="/signup"><button class="button">Регистрация</button></a>`;
+            <a href="/signup" class="liverpool"><button class="button">Регистрация</button></a>`;
         }
         document.getElementById("profile").innerHTML = html;
     }

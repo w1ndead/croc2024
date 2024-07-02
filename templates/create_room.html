@@ -11,11 +11,11 @@ Create Room
 {% block main %}
 <div class="esh">
     <div class="vhod">
-        <h3 class="enter" id="error-message">Создание комнаты</h3>
+        <h3 class="enter" id="error-message">Создать комнату</h3>
     </div>
     <div class="create_room">
         <div>
-            <label for="room_name"><p>Название Комнаты</p></label>
+            <label for="room_name" class="room_name"><p>Название Комнаты</p></label><br>
             <input type="text" placeholder="Введите имя комнаты" name="room_name" id="room_name"><br>
             <label for="master"><p>Ведущий</p></label>
             <select name="master" class="master" id="master">
@@ -27,8 +27,8 @@ Create Room
             <label for="privacy"><p>Приватность</p></label>
             <select name="privacy" class="privacy" id="privacy">
                 <p>
-                    <option value="private" selected>закрытая</option>
-                    <option value="not_private">открытая</option>
+                    <option value="privacy" selected>Да</option>
+                    <option value="not_privacy">Нет</option>
                 </p>
             </select><br>
             <button class="lgnbutton" id="create_room-btn">Создать</button>

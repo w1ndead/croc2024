@@ -1,58 +1,52 @@
 * {
     background-color: #272727;
     font-family: "Montserrat", sans-serif;
-    margin: 0%;
-    padding: 0%;
 }
 
 .frst-row {
+    margin-left: 5%;
     margin-top: 8%;
     background-color: #272727;
-    width: 100%;
+    width: 90%;
     height: 160px;
-    display: flex;
-    flex-direction: row;
 
 }
 
 .scnd-row {
+    margin-left: 5%;
     margin-top: 4%;
     background-color: #272727;
-    width: 100%;
+    width: 90%;
     height: 160px;
-    display: flex;
-    flex-direction: row;
 }
 
 .thrd-row {
+    margin-left: 5%;
     margin-top: 4%;
     background-color: #272727;
-    width: 100%;
+    width: 90%;
     height: 160px;
-    display: flex;
-    flex-direction: row;
+
 }
 
 .frstcam {
     margin-left: 7%;
     width: 16%;
     height: 100%;
+    background-color: white;
     display: inline-block;
     border-radius: 15px;
-    padding: 0% 1%;
-    display: flex;
-    flex-direction: column;
+    padding: 1% 1%;
 }
 
 .scndcam {
     margin-left: 53.5%;
     width: 16%;
     height: 100%;
+    background-color: white;
     display: inline-block;
     border-radius: 15px;
-    padding: 0% 1%;
-    display: flex;
-    flex-direction: column;
+    padding: 1% 1%;
 }
 
 .esh {
@@ -60,7 +54,6 @@
     height: 600px;
     align-items: center;
     background-color: #272727;
-    width: 100%;
 }
 
 .leave {
@@ -69,12 +62,7 @@
     align-content: center;
 }
 
-.user-label {
-    font-size: smaller;
-    color: white;
-}
-
-#leave-btn {
+button {
     margin-left: 45%;
     margin-top: 2%;
     width: 10%;
@@ -82,12 +70,4 @@
     background-color: #FF7070;
     color: white;
     border-radius: 10px;
-}
-
-video {
-    width: 100%;
-    height: auto;
-    border-radius: 15px;
-    margin-bottom: 2%;
-    background-color: white;
 }
