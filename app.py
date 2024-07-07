@@ -279,5 +279,9 @@ def check_cookies():
 def lobby():
     return render_template('room.html')
 
+@app.route('/room2')
+def game():
+    return render_template('player_room.html')
+
 if __name__ == "__main__":
     app.run(debug=True, port=1488)

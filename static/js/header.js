@@ -16,11 +16,11 @@ send_xhr('POST', '/check_if_user_logged',
         if (xhr.response.check) {
             html += `
             <p class="username">${xhr.response.username}</p>
-            <a href="/logout_btn" class="button-container"><button class="button">Выйти из аккаунта</button></a>`;
+            <a href="/logout_btn" class="logout"><button class="button">Выйти из аккаунта</button></a>`;
         } else {
             html += `
-            <a href="/login" class="barak">Вход</a>
-            <a href="/signup" class="liverpool"><button class="button">Регистрация</button></a>`;
+            <a href="/login" class="username">Вход</a>
+            <a href="/signup" class="logout"><button class="button">Регистрация</button></a>`;
         }
         document.getElementById("profile").innerHTML = html;
     }

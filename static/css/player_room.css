@@ -1,73 +1,123 @@
 * {
-    background-color: #272727;
+    background-color: #ffffff;
     font-family: "Montserrat", sans-serif;
 }
 
-.frst-row {
-    margin-left: 5%;
-    margin-top: 8%;
-    background-color: #272727;
-    width: 90%;
-    height: 160px;
 
-}
-
-.scnd-row {
-    margin-left: 5%;
-    margin-top: 4%;
-    background-color: #272727;
-    width: 90%;
-    height: 160px;
-}
-
-.thrd-row {
-    margin-left: 5%;
-    margin-top: 4%;
-    background-color: #272727;
-    width: 90%;
-    height: 160px;
-
-}
-
-.frstcam {
-    margin-left: 7%;
-    width: 16%;
-    height: 100%;
-    background-color: white;
+.cam {
+    width: 16vw;
+    height: 9vw;
+    background-color: #d9d9d9;
     display: inline-block;
     border-radius: 15px;
-    padding: 1% 1%;
+    border: 3px solid #000000;
 }
 
-.scndcam {
-    margin-left: 53.5%;
-    width: 16%;
-    height: 100%;
-    background-color: white;
+.master-cam {
+    width: 16vw;
+    height: 9vw;
+    background-color: #d9d9d9;
     display: inline-block;
     border-radius: 15px;
-    padding: 1% 1%;
+    border: 3px solid #FFFF00;
+    margin-left: 15.5%;
 }
 
-.esh {
-    margin-top: -60px;
-    height: 600px;
-    align-items: center;
-    background-color: #272727;
+.vote_cam {
+    width: 16vw;
+    height: 9vw;
+    background-color: #d9d9d9;
+    display: inline-block;
+    border-radius: 15px;
+    border: 3px solid #ff0000;
 }
 
 .leave {
     width: 100%;
-    align-items: center;
+}
+
+.ann_text {
+    text-align: center;
+}
+
+.announcement {
+    width: 100%;
+    height: 9vw;
+    margin-left: 4%;
+    /* display: inline-block; */
+}
+
+.vote {
+    background-color: #77e577;
+    width: 50%;
+    height: 40%;
+    border-radius: 15px;
+    border: none;
+    margin-left: 25%;
+}
+
+.vote:hover {
+    background-color: #68ca68;
+}
+
+.cams {
+    width: 100%;
+    margin-left: 7%;
+    margin-top: 3%;
+}
+
+.player_num {
+    width: 2vw;
+    height: 2vw;
+    background-color: #000000;
+    border-radius: 25%;
+    margin-top: -9.5vw;
+    margin-left: -2.25vw;
+    color: #ffffff;
+    text-align: center;
     align-content: center;
 }
 
-button {
-    margin-left: 45%;
-    margin-top: 2%;
-    width: 10%;
+.kill {
+    width: 8vw;
+    background-color: #f37777;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border: none;
+    margin-top: 4.75vw;
+    margin-left: 4vw;
+}
+
+.kill:hover {
+    background-color: #af5656;
+}
+
+.put_to_vote {
+    width: 12vw;
+    background-color: #77e577;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border: none;
+    margin-top: 4.75vw;
+    margin-left: 2vw;
+}
+
+.put_to_vote:hover {
+    background-color: #68ca68;
+}
+
+.your-role {
+    width: auto;
     text-align: center;
-    background-color: #FF7070;
-    color: white;
-    border-radius: 10px;
+    font-size: x-large;
+}
+
+.mafia-role {
+    display: inline-block;
+    color: #ff0000;
+}
+
+.citisen-role {
+    display: inline-block;
+    color: #77e577;
 }
