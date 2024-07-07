@@ -82,11 +82,26 @@ video {
     height: auto;
     border-radius: 15px;
     margin-bottom: 2%;
-    background-color: black;
+    /* background-color: black; */
 }
 
 .info {
     width: 32vw;
     margin-left: 10%;
     margin-top: -10%;
+}
+
+.master-request {
+    border: none;
+    width: 30%;
+    background-color: #77e577;
+    border-radius: 10px;
+    height: 10%;
+    margin-left: 36%;
+    margin-top: 10%;
+}
+
+#cam {
+    border: 1px solid #000000;
+    border-radius: 15px;
 }

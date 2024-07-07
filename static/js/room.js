@@ -1,34 +1,63 @@
 const socket = io();
 
 const player = function() {
+    console.log('player unction start');
     let room = get_get_parameter('room');
     let xhr = send_and_get_xhr('POST', '/check_if_host', {'room': room, 'user_id': get_cookie('user_id')});
     let username = xhr.response.split(',')[0];
     let if_host = xhr.response.split(',')[1];
     
     if (if_host == 'true') {
-        add_host_html();
+        add_host_content(room, username);
     }
     
     socket.emit('user_requested_joining', {'room': room, 'username': username});
     
     socket.on('user_joined', function(data) {
-        add_user_to_waiting_list(data['username'])
+        add_user_to_waiting_list(data['username'], data['master_name'])
     });
     
     socket.on('user_join_request_was_confirmed', function(data) {
+        console.log('user join request was confirmed');
         document.getElementsByClassName('info')[0].innerHTML = '';
     });
     
     socket.on('user_join_request_was_declined', function(data) {
+        console.log('user join request was declined');
         window.location.replace('/?msg=request_declined')
     });
     
-    if (if_host == 'true') {
-        socket.on('user_sent_join_request', function(data) {
-            add_user_to_request_list(data['username'], data['user_sid'], room)
-        });
-    }
+    socket.on('master_changed', function(data) {
+        change_master(data['new_master_username']);
+    });
+    
+    document.getElementsByClassName('master-request')[0].
+    addEventListener('click', () => {
+        console.log('sending master request');
+        socket.emit('user_requested_becoming_master', {'username': username, 'room': room, 'sid': socket.id});
+    });
+    
+    socket.on('waiting_user_was_removed', function(data) {
+        remove_waiting_user(data['username']);
+    });
+    
+    socket.on('user_from_requests_was_removed', function(data) {
+        remove_user_from_requests(data['username']);
+    });
+    
+    socket.on('start_game', function(data) {
+        start_game();
+    });
+    
+    socket.on('you_are_the_host_now', function(data) {
+        if_host = 'true'
+        console.log('becoming host');
+        add_host_content(room, username);
+    });
+    
+    document.getElementById('leave-button').addEventListener('click', leave);
+    
+    set_local_video();
     
     send_xhr(
         'POST',
@@ -40,19 +69,78 @@ const player = function() {
             if (xhr.status != 200) {
                 console.log(xhr.status);
             } else {
-                console.log(xhr.response)
                 for (let user of xhr.response.users) {
-                    add_user_to_waiting_list(user.username)
+                    let master_name = xhr.response.master_name;
+                    add_user_to_waiting_list(user.username, master_name)
                 }
             }
         }
     );
 }
 
+const start_game = function() {
+    console.log('starting game');
+}
+
+const leave = function() {
+    console.log('leaving the game');
+    window.location.replace('/');
+}
+
+const remove_waiting_user = function(username) {
+    console.log('removing waiting user, username: ' + username);
+    let element = document.querySelector(`[class="users_waiting_tr"][username="${username}"]`);
+    element.remove();
+}
+
+const remove_user_from_requests = function(username) {
+    console.log('removing user from requests, user: ' + username);
+    let element = document.querySelector(`[class="request_tr"][username="${username}"]`);
+    element.remove();
+}
+
+const remove_master_request = function(username) {
+    let el1 = document.querySelector(`[class="master-confirm-td"][username="${username}"]`);
+    if (el1 != null) {
+        el1.remove();
+    }
+    let el2 = document.querySelector(`[class="master-decline-td"][username="${username}"]`);
+    if (el2 != null) {
+        el2.remove();
+    }
+}
+
+const add_master_request = function(new_master_username, room) {
+    let element = document.querySelector(`[class="users_waiting_tr"][username="${new_master_username}"]`);
+    element.innerHTML += `
+        <td class="master-confirm-td" username="${new_master_username}"><button class="master-confirm" username="${new_master_username}">✅</button></td>
+        <td class="master-decline-td" username="${new_master_username}"><button class="master-decline" username="${new_master_username}">❌</button></td>
+    `;
+    document.querySelector(`[class="master-confirm"][username="${new_master_username}"]`).
+    addEventListener('click', () => {
+        socket.emit('master_change_request_confirmed', {'username': new_master_username, 'room': room});
+        remove_master_request(new_master_username);
+    });
+    document.querySelector(`[class="master-decline"][username="${new_master_username}"]`).
+    addEventListener('click', () => {
+        remove_master_request(new_master_username);
+    });
+}
+
+const change_master = function(new_master_username) {
+    console.log('changing master to ' + new_master_username);
+    let elements = document.getElementsByClassName('users_waiting');
+    for (let element of elements) {
+        element.setAttribute('style', 'color: black');
+    }
+    let element = document.querySelector(`[class="users_waiting"][username="${new_master_username}"]`);
+    element.setAttribute('style', 'color: green');
+}
+
 const add_user_to_request_list = function(username, sid, room) {
     document.getElementById('requests').
     innerHTML += `
-        <tr sid="${sid}">
+        <tr class="request_tr" username="${username}" sid="${sid}">
             <th scope="row">Заявка ${username}</th>
             <td><button class="confirm" sid="${sid}">✅</button></td>
             <td><button class="decline" sid="${sid}">❌</button></td>
@@ -72,71 +160,55 @@ const add_user_to_request_list = function(username, sid, room) {
     });
 }
 
-const add_user_to_waiting_list = function(username) {
+const add_user_to_waiting_list = function(username, master_name) {
     document.getElementById('players_waiting').innerHTML += `
-        <tr>
-            <th scope="row">${username}</th>
+        <tr class="users_waiting_tr" username="${username}">
+            <th class="users_waiting" scope="row" username="${username}">${username}</th>
         </tr>
-    `
+    `;
+    if (username == master_name) {
+        document.querySelector(`[class="users_waiting"][username="${username}"]`).
+        setAttribute('style', 'color: green');
+    }
 }
 
-const add_host_html = function() {
+const add_host_content = function(room, username) {
+    console.log('add_host_content function start');
     document.getElementsByClassName('info')[0].innerHTML = '';
     let body = document.getElementsByTagName('body')[0];
     body.innerHTML += `
         <button class="start">Начать игру</button>
         <button class="settings">⚙️</button>
         <table class="applications">
-            <tbody id="requests">
-            </tbody>
+        <tbody id="requests">
+        </tbody>
         </table>
     `;
+    document.getElementsByClassName('start')[0].
+    addEventListener('click', () => {
+        socket.emit('start_game_request', {'room': room, 'username': username, 'sid': socket.id});
+    });
+    
+    socket.on('master_change_request', function(data) {
+        add_master_request(data['username'], room);
+    });
+    
+    socket.on('user_sent_join_request', function(data) {
+        add_user_to_request_list(data['username'], data['user_sid'], room)
+    });
+    
+    document.getElementsByClassName('master-request')[0].
+    addEventListener('click', () => {
+        socket.emit('user_requested_becoming_master', {'username': username, 'room': room, 'sid': socket.id});
+    });
 }
 
-const show_room = function(room) {
-    document.getElementById('join-div').innerHTML = '';
-    document.getElementById('room').innerHTML = `
-        <div class="esh">
-            <div class="frst-row">
-                <div class="frstcam"><p class="user-label" id="player-9">не подключен</p><video id="video-9" autoplay></video></div>
-                <div class="frstcam"><p class="user-label" id="player-10">не подключен</p><video id="video-10" autoplay></video></div>
-                <div class="frstcam"><p class="user-label" id="player-1">не подключен</p><video id="video-1" autoplay></video></div>
-                <div class="frstcam"><p class="user-label" id="player-2">не подключен</p><video id="video-2" autoplay></video></div>
-            </div>
-            <div class="scnd-row">
-                <div class="frstcam"><p class="user-label" id="player-8">не подключен</p><video id="video-8" autoplay></video></div>
-                <div class="scndcam"><p class="user-label" id="player-3">не подключен</p><video id="video-3" autoplay></video></div>
-            </div>
-            <div class="thrd-row">
-                <div class="frstcam"><p class="user-label" id="player-7">не подключен</p><video id="video-7" autoplay></video></div>
-                <div class="frstcam"><p class="user-label" id="player-6">не подключен</p><video id="video-6" autoplay></video></div>
-                <div class="frstcam"><p class="user-label" id="player-5">не подключен</p><video id="video-5" autoplay></video></div>
-                <div class="frstcam"><p class="user-label" id="player-4">не подключен</p><video id="video-4" autoplay></video></div>
-            </div>
-        </div>
-        <div class="leave">
-            <button id="leave-btn">
-                Выйти из игры
-            </button>
-        </div>
-    `;
-    send_xhr(
-        'POST',
-        '/get_users_by_room',
-        {
-            'room': room
-        },
-        function(xhr) {
-            if (xhr.status == 400) {
-                document.write(xhr.response.error);
-            } else if (xhr.status == 200) {
-                console.log('users:' + xhr.response.users);
-                for (let i in xhr.response.users) {
-                    add_user(xhr.response.users[i], parseInt(i) + 1);
-                }
-            }
-        }
-    );
+const set_local_video = async function() { // TODO: not working
+    console.log('setting local video');
+    const stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true});
+    console.log('received local stream');
+    const video = document.getElementById('cam');
+    video.srcObject = stream;
 }
 
 const send_xhr = function(method, addr, data, handler) {
@@ -187,12 +259,12 @@ const get_cookie = function(name) {
 }
 
 socket.on('connect', () => {
-    console.log(socket.id);
+    console.log('connected to socket, sid: ' + socket.id);
 });
 
 if (get_get_parameter('t') == 'player') {
-    player()
+    player();
 } else if (get_get_parameter('t') == 'spectator') {
-    spectator()
+    spectator();
 }
         

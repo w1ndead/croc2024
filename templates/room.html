@@ -22,12 +22,14 @@
             <table class="num_of_players">
                 <tbody id="players_waiting"></tbody>
             </table>
-        </div>
-        <div class="video" id="cam"></div>
+        <button class="master-request">Стать ведущим</button>
+    </div>
+        <video class="video" id="cam" autoplay></video>
         <div class="info">
             <h1>Ожидайте пока вашу заявку рассмотрят...</h1>
         </div>
     </div>
+    <button id="leave-button">Покинуть игру</button>
     <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 </body>
 </html>

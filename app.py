@@ -48,7 +48,6 @@ rooms = {
         'users_waiting': [], # {'username', 'user_sid'}
         'user_join_requests': [], # {'username', 'user_sid'}
         'users': { # {'username', 'user_sid', 'role', 'is_alive'}
-            0: '',
             1: '',
             2: '',
             3: '',
@@ -57,12 +56,14 @@ rooms = {
             6: '',
             7: '',
             8: '',
-            9: ''
+            9: '',
+            10: ''
         },
         'spectators': [], # {'username', 'user_sid'}
         'settings': {
             'id': 0,
             'master': '',
+            'master_sid': '',
             'master_exists': True,
             'status': 'не начато',
             'host': 'tim',
@@ -70,6 +71,7 @@ rooms = {
         }
     }
 }
+room_by_user_sids = {}
 
 @app.route('/get_rooms', methods=['GET', 'POST'])
 def get_rooms():
@@ -395,8 +397,76 @@ def check_if_host():
     else:
         return user.username + ',false'
 
+@socketio.on('start_game_request')
+def on_start_game_request(data):
+    room = data['room']
+    username = data['username']
+    sid = data['sid']
+    print('start game request from host ' + username + ' (room: ' + room + ')')
+    if username != rooms[room]['settings']['host']:
+        return
+    users_amount_needed = 10
+    if rooms[room]['settings']['master_exists']:
+        if rooms[room]['settings']['master'] == '':
+            print('master required, but not assigned in room ' + room)
+            emit('master_not_assigned', {}, to=sid)
+        users_amount_needed += 1
+    if users_amount_needed != len(rooms[room]['users_waiting']):
+        print('incorrect amount of players in room ' + room + '. ' + str(len(rooms[room]['users_waiting'])) + ' instead of ' + str(users_amount_needed))
+        emit('incorrect_amount_of_players_in_room', {}, to=sid)
+    else:
+        users_waiting = rooms[room]['users_waiting'][:]
+        rooms[room]['users_waiting'] = []
+        for user in users_waiting:
+            if user['username'] == rooms[room]['settings']['master']:
+                rooms[room]['settings']['master_sid'] = user['user_sid']
+                users_waiting.remove(user)
+                break
+        random.shuffle(users_waiting)
+        print(users_waiting)
+        # assign roles
+        for i in range(1, len(users_waiting) + 1):
+            print(i)
+            rooms[room]['users'][i] =\
+                  {'username': users_waiting[i - 1]['username'], 'user_sid': users_waiting[i - 1]['user_sid'], 'role': 'unassigned', 'alive': True}
+        emit('start_game', to=room)
+        print('game started, room: ' + room)
+
+@socketio.on('master_change_request_confirmed')
+def on_master_change_request_confirmed(data):
+    print('master change request was confirmed: ' + str(data))
+    print('changing master, new master: ' + data['username'])
+    username = data['username']
+    room = data['room']
+    rooms[room]['settings']['master'] = username
+    rooms[room]['settings']['master_sid'] = request.sid
+    emit('master_changed', {'new_master_username': username}, to=room)
+
+@socketio.on('user_requested_becoming_master')
+def on_user_requested_becoming_master(data):
+    print('user requested becoming master: ' + str(data))
+    username = data['username']
+    room = data['room']
+    if username == rooms[room]['settings']['master']:
+        print('user ' + username + ' is already master in room ' + room)
+        return
+    host = rooms[room]['settings']['host']
+    host_sid = ''
+    for user in rooms[room]['users_waiting']:
+        if user['username'] == rooms[room]['settings']['host']:
+            host_sid = user['user_sid']
+            break
+    if host == username:
+        rooms[room]['settings']['master'] = username
+        rooms[room]['settings']['master_sid'] = host_sid
+        print('changing master, new master: ' + data['username'])
+        emit('master_changed', {'new_master_username': username}, to=room)
+    else:
+        emit('master_change_request', {'username': username}, to=host_sid)
+
 @socketio.on('join_request_declined')
 def on_join_request_declined(data):
+    print('user request was declined: ' + str(data))
     user_sid = data['user_sid']
     room = data['room']
     for i in range(len(rooms[room]['user_join_requests'])):
@@ -407,16 +477,18 @@ def on_join_request_declined(data):
 
 @socketio.on('join_request_confirmed')
 def on_join_request_confirmed(data):
+    print('user request was confirmed: ' + str(data))
     user_sid = data['user_sid']
     room = data['room']
     username = ''
+    room_by_user_sids[user_sid] = room
     for i in range(len(rooms[room]['user_join_requests'])):
         if rooms[room]['user_join_requests'][i]['user_sid'] == user_sid:
             username = rooms[room]['user_join_requests'][i]['username']
             rooms[room]['user_join_requests'].pop(i)
             break
     rooms[room]['users_waiting'].append({'username': username, 'user_sid': user_sid})
-    emit('user_joined', {'username': username, 'user_sid': user_sid}, to=room)
+    emit('user_joined', {'username': username, 'user_sid': user_sid, 'master_name': rooms[room]['settings']['master']}, to=room)
     emit('user_join_request_was_confirmed', {}, to=user_sid)
 
 @socketio.on('user_requested_joining')
@@ -425,11 +497,12 @@ def on_user_requested_joining(data):
     room = data['room']
     username = data['username']
     sid = request.sid
+    room_by_user_sids[sid] = room
     if rooms[room]['settings']['privacy_status'] == 'открытая' or username == rooms[room]['settings']['host']:
         rooms[room]['users_waiting'].append({'username': username, 'user_sid': sid})
         join_room(room)
-        print('user_joined' + str({'username': username, 'user_sid': sid}))
-        emit('user_joined', {'username': username, 'user_sid': sid}, to=room)
+        print('user_joined: ' + str({'username': username, 'user_sid': sid}))
+        emit('user_joined', {'username': username, 'user_sid': sid, 'master_name': rooms[room]['settings']['master']}, to=room)
         emit('user_join_request_was_confirmed', {}, to=sid)
     else:
         rooms[room]['user_join_requests'].append({'username': username, 'user_sid': sid})
@@ -441,6 +514,49 @@ def on_user_requested_joining(data):
                 break
             print('user_sent_join_request' + str({'username': username, 'user_sid': sid}))
         emit('user_sent_join_request', {'username': username, 'user_sid': sid}, to=host_sid)
+
+@socketio.on('disconnect')
+def on_disconnect():
+    print('user disconnected: ' + request.sid)
+    room = room_by_user_sids[request.sid]
+    host = rooms[room]['settings']['host']
+    host_sid = ''
+    for user in rooms[room]['users_waiting']:
+        if user['username'] == host:
+            host_sid = user['user_sid']
+            break
+    for user in rooms[room]['users_waiting']:
+        if user['user_sid'] == request.sid:
+            rooms[room]['users_waiting'].remove(user)
+            if rooms[room]['settings']['master_sid'] == request.sid:
+                print('master of room ' + room + ' disconnected, re-assigning master')
+                if len(rooms[room]['users_waiting']) == 0:
+                    print('cannot re-assign master, no users left in the room')
+                    rooms[room]['settings']['master'] = ''
+                    rooms[room]['settings']['master_sid'] = ''
+                else:
+                    print('re-assigning master, new master: ' + rooms[room]['users_waiting'][0]['username'])
+                    rooms[room]['settings']['master'] = rooms[room]['users_waiting'][0]['username']
+                    rooms[room]['settings']['master_sid'] = rooms[room]['users_waiting'][0]['user_sid']
+                    emit('master_changed', {'new_master_username': rooms[room]['users_waiting'][0]['username']}, to=room)
+            if host_sid == request.sid:
+                print('host of room ' + room + ' disconnected, re-assigning host')
+                if len(rooms[room]['users_waiting']) == 0:
+                    print('cannot re-assign host, no users left in the room')
+                    rooms[room]['settings']['host'] = ''
+                else:
+                    print('re-assigning host, new host: ' + rooms[room]['users_waiting'][0]['username'])
+                    rooms[room]['settings']['host'] = rooms[room]['users_waiting'][0]['username']
+                    emit('you_are_the_host_now', {}, to=rooms[room]['users_waiting'][0]['user_sid'])
+            print('removing user ' + request.sid + ' from waiting list')
+            emit('waiting_user_was_removed', {'username': user['username']}, to=room)
+            break
+    for user in rooms[room]['user_join_requests']:
+        if user['user_sid'] == request.sid:
+            rooms[room]['user_join_requests'].remove(user)
+            print('removing user ' + request.sid + ' from request list')
+            emit('user_from_requests_was_removed', {'username': user['username']}, to=room)
+            break
 
 @app.route('/get_username_by_id', methods=['POST'])
 def get_username_by_id():
@@ -456,7 +572,7 @@ def get_users_by_room():
     if recieved_data['room'] not in rooms.keys():
         return jsonify({'error': 'room_not_found'}), 400
     else:
-        return jsonify({'users': rooms[recieved_data['room']]['users_waiting']}), 200
+        return jsonify({'users': rooms[recieved_data['room']]['users_waiting'], 'master_name': rooms[recieved_data['room']]['settings']['master']}), 200
 
 @app.route('/room')
 def page_room():
@@ -464,5 +580,5 @@ def page_room():
 
 if __name__ == '__main__':
     print('SERVER IS RUNNING 😎')
-    # socketio.run(app, debug=True, port=1488, host='192.168.172.200')
-    socketio.run(app, debug=True, port=1488)
+    # socketio.run(app, debug=True, port=8000, host='192.168.172.200')
+    socketio.run(app, debug=True, port=8000)

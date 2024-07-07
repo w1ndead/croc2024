@@ -23,11 +23,6 @@ body {
     margin-left: 8%;
 }
 
-#cam {
-    border: 1px solid #000000;
-    border-radius: 15px;
-}
-
 .num_of_players {
     width: 100%;
     color: #000000;
