@@ -1,2 +1,2 @@
 # croc2024
-got to backend branch
+go to backend branch
