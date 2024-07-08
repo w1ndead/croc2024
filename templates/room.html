@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/room.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/host_lobby.css') }}">
     <title>clash mafia</title>
+    <script>
+        const socket = io();
+    </script>
 </head>
 <body>
     <div class="cam-players">
@@ -30,6 +33,7 @@
         </div>
     </div>
     <button id="leave-button">Покинуть игру</button>
+    <script src="{{ url_for('static', filename='js/game.js') }}"></script>
     <script src="{{ url_for('static', filename='js/room.js') }}"></script>
 </body>
 </html>

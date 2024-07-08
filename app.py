@@ -64,7 +64,7 @@ rooms = {
             'id': 0,
             'master': '',
             'master_sid': '',
-            'master_exists': True,
+            'master_exists': False,
             'status': 'не начато',
             'host': 'tim',
             'privacy_status': 'закрытая'
@@ -361,22 +361,24 @@ def create_room():
         privacy_status = 'закрытая'
     rooms[rec_data['room_name']] = {
         'users_waiting': [],
+        'user_join_requests': [],
         'users': {
-            0: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            1: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            2: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            3: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            4: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            5: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            6: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            7: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            8: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''},
-            9: {'username': '', 'user_sid': '', 'role': '', 'is_alive': ''}
+            1: '',
+            2: '',
+            3: '',
+            4: '',
+            5: '',
+            6: '',
+            7: '',
+            8: '',
+            9: '',
+            10: ''
         },
         'spectators': [],
         'settings': {
             'id': 0,
             'master': '',
+            'master_sid': '',
             'master_exists': master_exists,
             'status': 'не начато',
             'host': user.username,
@@ -405,7 +407,7 @@ def on_start_game_request(data):
     print('start game request from host ' + username + ' (room: ' + room + ')')
     if username != rooms[room]['settings']['host']:
         return
-    users_amount_needed = 10
+    users_amount_needed = 2
     if rooms[room]['settings']['master_exists']:
         if rooms[room]['settings']['master'] == '':
             print('master required, but not assigned in room ' + room)
@@ -423,13 +425,11 @@ def on_start_game_request(data):
                 users_waiting.remove(user)
                 break
         random.shuffle(users_waiting)
-        print(users_waiting)
         # assign roles
         for i in range(1, len(users_waiting) + 1):
-            print(i)
             rooms[room]['users'][i] =\
                   {'username': users_waiting[i - 1]['username'], 'user_sid': users_waiting[i - 1]['user_sid'], 'role': 'unassigned', 'alive': True}
-        emit('start_game', to=room)
+        emit('start_game', {'users_amount': users_amount_needed}, to=room)
         print('game started, room: ' + room)
 
 @socketio.on('master_change_request_confirmed')
@@ -447,6 +447,9 @@ def on_user_requested_becoming_master(data):
     print('user requested becoming master: ' + str(data))
     username = data['username']
     room = data['room']
+    if not rooms[room]['settings']['master_exists']:
+        print('in room ' + room + ' master is not requiered, aborting request from ' + username)
+        return
     if username == rooms[room]['settings']['master']:
         print('user ' + username + ' is already master in room ' + room)
         return
@@ -498,6 +501,9 @@ def on_user_requested_joining(data):
     username = data['username']
     sid = request.sid
     room_by_user_sids[sid] = room
+    if sid in room_by_user_sids.keys():
+        print('declining join reques from ' + username + '. reason: user is already in a room')
+        return
     if rooms[room]['settings']['privacy_status'] == 'открытая' or username == rooms[room]['settings']['host']:
         rooms[room]['users_waiting'].append({'username': username, 'user_sid': sid})
         join_room(room)

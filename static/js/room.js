@@ -1,5 +1,3 @@
-const socket = io();
-
 const player = function() {
     console.log('player unction start');
     let room = get_get_parameter('room');
@@ -46,7 +44,7 @@ const player = function() {
     });
     
     socket.on('start_game', function(data) {
-        start_game();
+        start_game(data, room, username, if_host);
     });
     
     socket.on('you_are_the_host_now', function(data) {
@@ -76,10 +74,6 @@ const player = function() {
             }
         }
     );
-}
-
-const start_game = function() {
-    console.log('starting game');
 }
 
 const leave = function() {
